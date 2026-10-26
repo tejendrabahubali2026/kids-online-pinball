@@ -16,7 +16,7 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "space-pinball-leaderboard"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "286a2c53-185f-4912-86ff-cf4d09e8a173"
 migrations_dir = "migrations"
 
 # Local development (`npx wrangler pages dev`) uses a local SQLite-backed D1
