@@ -37,6 +37,7 @@ export type GameState =
   | 'menu'
   | 'stageSelect'
   | 'howTo'
+  | 'credits'
   | 'playing'
   | 'paused'
   | 'stageComplete'
@@ -163,6 +164,7 @@ export class Game {
       onPlay: () => this.handlePlay(),
       onStageSelect: () => this.toStageSelect(),
       onHowTo: () => this.toHowTo(),
+      onCredits: () => this.toCredits(),
       onMenu: () => this.toMenu(),
       onSelectStage: (id) => this.startRun(id),
       onResetProgress: () => {
@@ -250,6 +252,14 @@ export class Game {
     this.state = 'howTo';
     this.sound.play('click');
     this.ui.showHowTo();
+  }
+
+  private toCredits(): void {
+    // Credits are a menu-only screen; never interrupt an active stage.
+    if (this.state !== 'menu' && this.state !== 'howTo') return;
+    this.state = 'credits';
+    this.sound.play('click');
+    this.ui.showCredits(this.prefs);
   }
 
   private handlePlay(): void {
@@ -578,6 +588,7 @@ export class Game {
       case 'KeyP':
       case 'Escape':
         if (this.state === 'playing' || this.state === 'paused') this.togglePause();
+        else if (this.state === 'credits') this.toMenu();
         break;
       case 'KeyM':
         this.toggleAllAudio();
@@ -587,6 +598,7 @@ export class Game {
         break;
       case 'Enter':
         if (this.state === 'menu') this.handlePlay();
+        else if (this.state === 'credits') this.toMenu();
         else if (this.state === 'stageComplete') this.nextStage();
         else if (this.state === 'victory') this.startRun(1);
         else if (this.state === 'gameOver') this.startRun(1);

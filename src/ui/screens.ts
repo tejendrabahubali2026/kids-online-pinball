@@ -5,6 +5,7 @@
  * All user-supplied strings (player names) are inserted with textContent —
  * never innerHTML — so a submitted name can't inject markup.
  */
+import { CREDIT_SEGMENTS } from '../game/credit';
 import type { HiScore, Prefs, Progress } from '../game/storage';
 import { formatScore } from '../game/util';
 import type { LeaderboardEntry } from '../shared/leaderboard';
@@ -14,6 +15,7 @@ export type ScreenName =
   | 'start'
   | 'stages'
   | 'howto'
+  | 'credits'
   | 'pause'
   | 'complete'
   | 'over'
@@ -23,6 +25,7 @@ export interface UICallbacks {
   onPlay: () => void;
   onStageSelect: () => void;
   onHowTo: () => void;
+  onCredits: () => void;
   onMenu: () => void;
   onSelectStage: (id: number) => void;
   onResetProgress: () => void;
@@ -63,6 +66,7 @@ const ICONS = {
   grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
   help: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.1 1-1.1 2.2"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg>',
   lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.9 6.3.8-4.6 4.4 1.2 6.4L12 17.4 6.4 20.5l1.2-6.4L3 9.7l6.3-.8L12 3Z"/></svg>',
   trophy:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z"/><path d="M8 5H5v2a3 3 0 0 0 3 3"/><path d="M16 5h3v2a3 3 0 0 1-3 3"/><path d="M12 13v4"/><path d="M8.5 21h7"/></svg>',
 };
@@ -98,6 +102,35 @@ function scoreRows(list: { name: string; score: number }[], highlight = -1, empt
   });
 }
 
+/**
+ * Builds the developer credit line.
+ *
+ * The element's `textContent` is exactly `CREDIT_TEXT` even though the e-mail
+ * address and website are real anchors, so the mandated wording is never
+ * altered by the markup.
+ */
+function creditLine(className: string, options: { links?: boolean } = {}): HTMLDivElement {
+  const line = el('div', className);
+  for (const segment of CREDIT_SEGMENTS) {
+    if (options.links && segment.href) {
+      const link = document.createElement('a');
+      link.href = segment.href;
+      link.textContent = segment.text;
+      if (segment.href.startsWith('mailto:')) {
+        link.setAttribute('aria-label', `Email the developer: ${segment.text}`);
+      } else {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.setAttribute('aria-label', `Developer website: ${segment.text}`);
+      }
+      line.appendChild(link);
+    } else {
+      line.appendChild(document.createTextNode(segment.text));
+    }
+  }
+  return line;
+}
+
 export class ScreenManager {
   private root: HTMLDivElement;
   private screens: Record<ScreenName, HTMLDivElement>;
@@ -117,6 +150,7 @@ export class ScreenManager {
   private hintEl: HTMLDivElement;
   private musicBtn: HTMLButtonElement;
   private sfxBtn: HTMLButtonElement;
+  private creditRail: HTMLElement;
 
   private startTable: HTMLUListElement;
   private stageGrid: HTMLDivElement;
@@ -193,6 +227,7 @@ export class ScreenManager {
             <button class="btn btn-small js-music-toggle">${ICONS.music}<span>MUSIC ON</span></button>
             <button class="btn btn-small js-sfx-toggle">${ICONS.sfx}<span>SFX ON</span></button>
             <button class="btn btn-small js-motion">REDUCED MOTION: OFF</button>
+            <button class="btn btn-small btn-quiet js-credits">${ICONS.star}<span>CREDITS</span></button>
           </div>
           <div class="controls">
             <div class="ctl"><span class="keys"><kbd>◀</kbd><kbd>A</kbd></span><span>Left flipper</span></div>
@@ -204,6 +239,10 @@ export class ScreenManager {
           <div class="hs">
             <div class="hs-title">${ICONS.trophy}<span>LOCAL TOP SPACE PILOTS</span></div>
             <ul class="hs-list js-start-table"></ul>
+          </div>
+          <div class="credit-block">
+            <div class="credit-label">DEVELOPED BY</div>
+            <div class="credit-start js-start-credit"></div>
           </div>
         </div>
       </div>
@@ -236,6 +275,30 @@ export class ScreenManager {
             <button class="btn btn-small js-music-toggle">${ICONS.music}<span>MUSIC ON</span></button>
             <button class="btn btn-small js-sfx-toggle">${ICONS.sfx}<span>SFX ON</span></button>
             <button class="btn btn-small js-motion">REDUCED MOTION: OFF</button>
+          </div>
+          <button class="btn btn-primary js-back">BACK</button>
+        </div>
+      </div>
+
+      <div class="spb-screen spb-credits">
+        <div class="panel">
+          <div class="kicker">MISSION CONTROL</div>
+          <h2 class="h-big">CREDITS</h2>
+          <div class="credit-hero">
+            <div class="credit-hero-label">DEVELOPER</div>
+            <div class="credit-hero-name">Tejendra Bahubali</div>
+            <div class="credit-hero js-credit-hero"></div>
+          </div>
+          <ul class="howto-list credit-list">
+            <li><b>Game design &amp; code</b><span>Tejendra Bahubali</span></li>
+            <li><b>Physics</b><span>Matter.js (MIT licence)</span></li>
+            <li><b>Build tooling</b><span>Vite · TypeScript · Vitest</span></li>
+            <li><b>Global leaderboard</b><span>Cloudflare Pages Functions + D1</span></li>
+            <li><b>Audio</b><span>Procedural Web Audio synthesis (no bundled third-party tracks)</span></li>
+          </ul>
+          <div class="audio-row">
+            <button class="btn btn-small js-music-toggle">${ICONS.music}<span>MUSIC ON</span></button>
+            <button class="btn btn-small js-sfx-toggle">${ICONS.sfx}<span>SFX ON</span></button>
           </div>
           <button class="btn btn-primary js-back">BACK</button>
         </div>
@@ -297,6 +360,10 @@ export class ScreenManager {
             <button class="btn btn-primary js-again">${ICONS.restart}<span>PLAY AGAIN</span></button>
             <button class="btn btn-ghost js-quit">${ICONS.grid}<span>STAGE SELECT</span></button>
           </div>
+          <div class="credit-block credit-block-over">
+            <div class="credit-label">DEVELOPED BY</div>
+            <div class="credit-gameover js-over-credit"></div>
+          </div>
         </div>
       </div>
 
@@ -318,8 +385,14 @@ export class ScreenManager {
           <button class="btn btn-small btn-ghost js-victory-retry">RETRY LEADERBOARD</button>
           <button class="btn btn-primary js-again">${ICONS.play}<span>PLAY AGAIN</span></button>
           <button class="btn btn-ghost js-quit">${ICONS.grid}<span>STAGE SELECT</span></button>
+          <div class="credit-block credit-block-over">
+            <div class="credit-label">DEVELOPED BY</div>
+            <div class="credit-gameover js-victory-credit"></div>
+          </div>
         </div>
       </div>
+
+      <div class="spb-credit-rail" role="contentinfo" aria-label="Developer credit"></div>
 
       <div class="spb-touch">
         <button class="touch-btn touch-flip js-touch-left" aria-label="Left flipper">◀</button>
@@ -357,6 +430,7 @@ export class ScreenManager {
       start: q('.spb-start'),
       stages: q('.spb-stages'),
       howto: q('.spb-howto'),
+      credits: q('.spb-credits'),
       pause: q('.spb-pause'),
       complete: q('.spb-complete'),
       over: q('.spb-over'),
@@ -388,6 +462,14 @@ export class ScreenManager {
     this.victoryStatus = q('.js-victory-status');
     this.victoryGlobal = q('.js-victory-global');
 
+    // Developer credit: exact mandated line, with the e-mail + website as links.
+    this.creditRail = q('.spb-credit-rail');
+    q('.js-start-credit').replaceWith(creditLine('credit-start js-start-credit', { links: true }));
+    q('.js-over-credit').replaceWith(creditLine('credit-gameover js-over-credit', { links: true }));
+    q('.js-victory-credit').replaceWith(creditLine('credit-gameover js-victory-credit', { links: true }));
+    q('.js-credit-hero').replaceWith(creditLine('credit-hero-line js-credit-hero', { links: true }));
+    this.creditRail.replaceChildren(document.createTextNode(CREDIT_SEGMENTS.map((s) => s.text).join('')));
+
 
     this.bindEvents();
     this.setBalls(3);
@@ -407,6 +489,7 @@ export class ScreenManager {
     on('.js-play', this.cb.onPlay);
     on('.js-stages', this.cb.onStageSelect);
     on('.js-howto', this.cb.onHowTo);
+    on('.js-credits', this.cb.onCredits);
     on('.js-back', this.cb.onMenu);
     on('.js-resume', this.cb.onResume);
     on('.js-restart', this.cb.onRestartStage);
@@ -509,6 +592,8 @@ export class ScreenManager {
     this.active = name;
     this.root.classList.toggle('in-game', name === null);
     this.hud.classList.toggle('in-game', name === null);
+    // The subtle credit footer is only shown while a stage is being played.
+    this.creditRail.classList.toggle('in-game', name === null);
   }
 
   get activeScreen(): ScreenName | null {
@@ -566,6 +651,11 @@ export class ScreenManager {
 
   showHowTo(): void {
     this.showScreen('howto');
+  }
+
+  showCredits(prefs?: Prefs): void {
+    if (prefs) this.syncAudioButtons(prefs);
+    this.showScreen('credits');
   }
 
   enterGame(stage: StageConfig, balls: number, best: number, runScore: number): void {

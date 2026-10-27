@@ -1273,3 +1273,205 @@ kbd.wide {
     animation: none !important;
   }
 }
+
+/* ============================================================
+   Developer credits — start screen, credits screen, gameplay
+   footer and end screens. Text content comes from
+   src/game/credit.ts and must never be reworded here.
+   ============================================================ */
+
+/* Bleeds to the panel edges so the credit reads as the screen footer. */
+.credit-block {
+  width: auto;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 6px calc(-1 * clamp(20px, 4vw, 34px)) calc(-1 * clamp(20px, 4vw, 34px));
+  padding: 12px clamp(14px, 3vw, 22px) clamp(16px, 3.4vw, 24px);
+  border-top: 1px solid rgba(123, 92, 255, 0.32);
+  border-radius: 0 0 26px 26px;
+  background: linear-gradient(180deg, rgba(8, 6, 26, 0.28), rgba(5, 4, 18, 0.78));
+}
+
+.credit-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  color: #8f8fd8;
+}
+
+/* Mandated line: readable at a glance, wraps instead of overflowing. */
+.credit-start,
+.credit-gameover {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(10px, 2.4vw, 12px);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: #e6e3ff;
+  text-align: center;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.credit-start {
+  color: #f2f0ff;
+  text-shadow: 0 0 12px rgba(125, 249, 255, 0.35);
+}
+
+.credit-gameover {
+  color: #cfcbff;
+}
+
+.credit-start a,
+.credit-gameover a,
+.credit-hero-line a {
+  color: #7df9ff;
+  text-decoration: underline;
+  text-decoration-color: rgba(125, 249, 255, 0.45);
+  text-underline-offset: 3px;
+}
+
+.credit-start a:hover,
+.credit-gameover a:hover,
+.credit-hero-line a:hover {
+  color: #ffd257;
+  text-decoration-color: rgba(255, 210, 87, 0.7);
+}
+
+.credit-block-over {
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------- credits screen */
+
+.credit-hero {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 16px;
+  border-radius: 18px;
+  background: radial-gradient(ellipse at top, rgba(56, 232, 255, 0.12), rgba(123, 92, 255, 0.08) 60%, rgba(8, 6, 26, 0.6));
+  border: 1px solid rgba(56, 232, 255, 0.35);
+  box-shadow: inset 0 0 30px rgba(123, 92, 255, 0.18);
+}
+
+.credit-hero-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  letter-spacing: 0.42em;
+  color: #8f8fd8;
+}
+
+.credit-hero-name {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: clamp(19px, 5.4vw, 27px);
+  letter-spacing: 0.06em;
+  background: linear-gradient(90deg, #7df9ff, #b26bff 55%, #ff4fa3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgba(178, 107, 255, 0.5));
+  text-align: center;
+}
+
+.credit-hero-line {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(10px, 2.6vw, 13px);
+  line-height: 1.8;
+  color: #f2f0ff;
+  text-align: center;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.credit-list {
+  font-size: 12.5px;
+}
+
+.btn-quiet {
+  background: rgba(56, 232, 255, 0.12);
+  border: 1px solid rgba(56, 232, 255, 0.45);
+  color: #cdf6ff;
+  padding: 10px 20px;
+  font-size: 12px;
+}
+
+.btn-quiet:hover,
+.btn-quiet:active {
+  border-color: #7df9ff;
+  color: #fff;
+  transform: scale(1.04);
+}
+
+/* ------------------------------------------------ in-game credit footer */
+
+.spb-credit-rail {
+  position: absolute;
+  left: 50%;
+  bottom: max(4px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  max-width: min(96vw, 720px);
+  padding: 0 8px;
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(7px, 1.5vw, 9.5px);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: #cdc9ff;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+/* Subtle: visible but never competing with the playfield. */
+.spb-credit-rail.in-game {
+  opacity: 0.45;
+  visibility: visible;
+}
+
+/* Touch devices keep their button row at the bottom — lift the credit above it,
+   and nudge the hint pill up so the two never overlap. */
+@media (hover: none), (pointer: coarse) {
+  .spb-credit-rail {
+    bottom: max(96px, calc(env(safe-area-inset-bottom) + 92px));
+  }
+  .spb-hint {
+    bottom: max(124px, calc(env(safe-area-inset-bottom) + 118px));
+  }
+}
+
+@media (max-width: 620px) {
+  .credit-block {
+    padding-top: 10px;
+    gap: 4px;
+  }
+  .credit-start,
+  .credit-gameover {
+    font-size: 10px;
+    line-height: 1.75;
+  }
+  .spb-credit-rail {
+    max-width: 92vw;
+    white-space: normal;
+    line-height: 1.3;
+  }
+}
+
+@media (max-height: 560px) {
+  .credit-block {
+    padding-top: 8px;
+  }
+  .credit-label {
+    display: none;
+  }
+}

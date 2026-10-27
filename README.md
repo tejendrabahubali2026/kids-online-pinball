@@ -29,6 +29,31 @@ Built with **Vite + TypeScript + HTML Canvas + Matter.js**, deployable to
   locked stages, and large touch controls.
 - **Stable physics at any refresh rate**: the simulation runs on a fixed 60 Hz
   step with a speed cap that prevents tunnelling.
+- **Developer credits** shown on the start screen, a dedicated **CREDITS**
+  screen, a subtle semi-transparent footer while playing, and on the game-over
+  and victory screens.
+
+## Credits
+
+The developer credit line is stored once in `src/game/credit.ts` as ordered
+segments and rendered in four places:
+
+| Where | Element | Notes |
+| --- | --- | --- |
+| Start screen | `.credit-block` footer at the bottom of the menu panel | Full-size text, e-mail and website are links |
+| **CREDITS** screen | `CREDITS` button on the start menu | Mandated line large and centred, plus game/engine/tooling attribution |
+| Gameplay | `.spb-credit-rail` at the bottom of the playfield | Small, 45% opacity, no pointer events, lifted above the touch buttons |
+| Game over / victory | `.credit-block-over` footer | Full-size text with links |
+
+The mandated string is:
+
+```
+Dev- Tejendra Bahubali | Email - tejendrabahubali@outlook.com | Website - https://tejendrabahubali2026.pagezapp.cc.cd/
+```
+
+Because only the e-mail and URL are wrapped in anchors, every credit element's
+`textContent` still reads back as that exact string — verified in
+`tests/credits.test.ts`.
 
 ## Controls
 
@@ -175,6 +200,7 @@ src/
     stageBuilder.ts          # StageConfig → Matter.js bodies + draw data
     matterExtensions.ts      # typed wrappers for matter-js setAngle/setPosition
   shared/leaderboard.ts      # validation/parsing shared by client + Function
+  game/credit.ts             # developer credit text (single source of truth)
   ui/screens.ts              # menus, HUD, touch controls, leaderboard UI
 tests/                       # vitest suites
 tools/sim.ts                 # optional headless physics report
