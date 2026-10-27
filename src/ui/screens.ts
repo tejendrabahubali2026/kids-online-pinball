@@ -289,12 +289,9 @@ export class ScreenManager {
             <div class="credit-hero-name">Tejendra Bahubali</div>
             <div class="credit-hero js-credit-hero"></div>
           </div>
+          <div class="credit-tagline">Built with open-source web technologies</div>
           <ul class="howto-list credit-list">
             <li><b>Game design &amp; code</b><span>Tejendra Bahubali</span></li>
-            <li><b>Physics</b><span>Matter.js (MIT licence)</span></li>
-            <li><b>Build tooling</b><span>Vite · TypeScript · Vitest</span></li>
-            <li><b>Global leaderboard</b><span>Cloudflare Pages Functions + D1</span></li>
-            <li><b>Audio</b><span>Procedural Web Audio synthesis (no bundled third-party tracks)</span></li>
           </ul>
           <div class="audio-row">
             <button class="btn btn-small js-music-toggle">${ICONS.music}<span>MUSIC ON</span></button>
@@ -350,7 +347,7 @@ export class ScreenManager {
               <ul class="hs-list js-local-table"></ul>
             </div>
             <div class="board">
-              <div class="hs-title">GLOBAL TOP 10 <span class="chip">CLOUDFLARE D1</span></div>
+              <div class="hs-title">GLOBAL TOP 10 <span class="chip">PUBLIC</span></div>
               <div class="global-status js-global-status">Loading…</div>
               <ul class="hs-list js-global-table"></ul>
               <button class="btn btn-small btn-ghost js-retry">RETRY</button>

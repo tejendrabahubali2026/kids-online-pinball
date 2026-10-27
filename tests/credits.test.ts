@@ -144,11 +144,65 @@ describe('credit rendering', () => {
       document.querySelector('.spb-credits .credit-hero-line a[href^="https"]')?.getAttribute('href')
     ).toBe(DEVELOPER_WEBSITE);
     expect(document.querySelector('.spb-credits .credit-list')?.textContent).toContain('Tejendra Bahubali');
+    expect(document.querySelector('.spb-credits .credit-tagline')?.textContent).toBe(
+      'Built with open-source web technologies'
+    );
+    // Music/SFX toggles and BACK must stay on the credits screen.
+    expect(document.querySelectorAll('.spb-credits .js-music-toggle')).toHaveLength(1);
+    expect(document.querySelectorAll('.spb-credits .js-sfx-toggle')).toHaveLength(1);
+    expect(document.querySelectorAll('.spb-credits .js-back')).toHaveLength(1);
 
     // Back to the menu.
     (document.querySelector('.spb-credits .js-back') as HTMLButtonElement).click();
     pump(2);
     expect(document.querySelector('.spb-start')?.classList.contains('active')).toBe(true);
+  });
+
+  it('does not disclose the tech stack on the credits screen', () => {
+    game = boot();
+    (document.querySelector('.js-credits') as HTMLButtonElement).click();
+    pump(2);
+    const text = (document.querySelector('.spb-credits .panel')?.textContent ?? '').toLowerCase();
+    for (const term of [
+      'matter.js',
+      'matter js',
+      'vite',
+      'vitest',
+      'typescript',
+      'react',
+      'tailwind',
+      'cloudflare',
+      'pages functions',
+      'd1',
+      'sqlite',
+      'database',
+      'webaudio',
+      'web audio',
+      'freepik',
+      'pixabay',
+    ]) {
+      expect(text, `credits screen leaks "${term}"`).not.toContain(term);
+    }
+    // The physics/tooling/leaderboard/audio rows are gone; design credit remains.
+    const rows = Array.from(document.querySelectorAll('.spb-credits .credit-list li b')).map(
+      (node) => node.textContent
+    );
+    expect(rows).toEqual(['Game design & code']);
+  });
+
+  it('keeps cloud/library names out of every screen, including game over', async () => {
+    game = boot();
+    (document.querySelector('.js-play') as HTMLButtonElement).click();
+    pump(3);
+    (game as unknown as GameInternals).endRun('gameOver');
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    expect(document.querySelector('.spb-over')?.classList.contains('active')).toBe(true);
+
+    const uiText = (document.querySelector('.spb-ui')?.textContent ?? '').toLowerCase();
+    for (const term of ['cloudflare', 'matter.js', 'vite', 'vitest', 'typescript', 'd1', 'sqlite']) {
+      expect(uiText, `UI leaks "${term}"`).not.toContain(term);
+    }
+    expect(document.querySelector('.spb-over .chip')?.textContent).toBe('PUBLIC');
   });
 
   it('closes the credits screen with Escape', () => {

@@ -1390,6 +1390,16 @@ kbd.wide {
   text-wrap: balance;
 }
 
+.credit-tagline {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(10px, 2.5vw, 12px);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  color: #b9b6e8;
+  text-align: center;
+  text-wrap: balance;
+}
+
 .credit-list {
   font-size: 12.5px;
 }
