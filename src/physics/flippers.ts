@@ -10,7 +10,7 @@ export type FlipperSide = 'left' | 'right';
 /**
  * A kinematic pinball flipper.
  *
- * The blade is a *static* Matter body that is rotated around its pivot once per
+ * The blade is a *static* physics body that is rotated around its pivot once per
  * fixed tick. Because `Body.setAngle(angle, true)` and `Body.setPosition(…, true)`
  * update the body's previous transform, the collision solver sees genuine
  * contact velocities (blade angular sweep) and kicks the ball with real

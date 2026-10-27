@@ -1,10 +1,10 @@
 import Matter from 'matter-js';
 
 /**
- * matter-js 0.20 accepts an optional `updateVelocity` flag on `Body.setAngle`
- * and `Body.setPosition`, but the published `@types/matter-js` package still
- * describes the older two-argument signatures. These thin wrappers expose the
- * runtime behaviour with correct types instead of sprinkling `as any` or
+ * The physics engine accepts an optional `updateVelocity` flag on
+ * `Body.setAngle` and `Body.setPosition`, but its published type declarations
+ * still describe the older two-argument signatures. These thin wrappers expose
+ * the runtime behaviour with correct types instead of sprinkling `as any` or
  * `@ts-ignore` around the physics code.
  */
 type SetAngleFn = (body: Matter.Body, angle: number, updateVelocity?: boolean) => void;

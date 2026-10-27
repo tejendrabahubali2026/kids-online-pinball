@@ -2,7 +2,7 @@
  * Typed, data-driven stage model.
  *
  * A stage is pure data: layout elements, physics modifiers, goals, theme and
- * rewards. `buildStageBodies()` turns it into Matter.js bodies and the renderer
+ * rewards. `buildStageBodies()` turns it into physics bodies and the renderer
  * draws the same data — the game loop never hard-codes stage content.
  */
 
@@ -156,7 +156,7 @@ export interface StageConfig {
   tagline: string;
   theme: StageTheme;
   archetype: string;
-  /** Matter gravity multiplier (0.55 easy … 1.15 hard). */
+  /** Gravity multiplier (0.55 easy … 1.15 hard). */
   gravity: number;
   /** Balls for this stage. */
   balls: number;

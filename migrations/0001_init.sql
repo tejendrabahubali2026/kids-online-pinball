@@ -1,7 +1,6 @@
--- Cloudflare D1 migration: global leaderboard + basic rate limiting.
--- Apply with:
---   npx wrangler d1 migrations apply DB --local     (development)
---   npx wrangler d1 migrations apply DB --remote    (production)
+-- Leaderboard schema migration: global scores + basic rate limiting.
+-- Apply it to your local development database and to the production database
+-- with your hosting platform's migration command.
 
 CREATE TABLE IF NOT EXISTS scores (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,

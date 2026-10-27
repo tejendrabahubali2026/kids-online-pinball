@@ -1,9 +1,9 @@
 /**
- * Client for the Cloudflare D1 leaderboard (`/api/scores`).
+ * Client for the public leaderboard API (`/api/scores`).
  *
  * Every call is time-boxed and never throws: the caller always gets a result
- * object so the game can fall back to the local leaderboard when the Pages
- * Function is unavailable (plain `vite dev`, offline play, etc.).
+ * object so the game can fall back to the local leaderboard when the server
+ * endpoint is unavailable (development server, offline play, etc.).
  */
 import { SCORES_ENDPOINT } from './constants';
 import {

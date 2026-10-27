@@ -1,10 +1,7 @@
 /**
  * Headless physics + stage verification harness (development only).
  *
- * Run it with:
- *   npx esbuild tools/sim.ts --bundle --platform=node --format=esm --outfile=/tmp/sim.mjs
- *   node /tmp/sim.mjs
- *
+ * Bundle it with your tooling of choice and run it in a JavaScript runtime.
  * The same scenarios are covered by `npm test` (tests/physics.test.ts), which is
  * the recommended way to run them.
  */

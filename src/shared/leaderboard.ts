@@ -1,9 +1,9 @@
 /**
  * Shared leaderboard validation + response parsing.
  *
- * Imported by BOTH the browser bundle and the Cloudflare Pages Function so the
- * client and server agree on the exact contract. Keep this module free of DOM,
- * Node and Cloudflare APIs so it can run in every runtime.
+ * Imported by BOTH the browser bundle and the server-side endpoint so the
+ * client and server agree on the exact contract. Keep this module free of DOM
+ * and runtime-specific APIs so it can run in every environment.
  */
 
 export const NAME_MAX_LENGTH = 12;

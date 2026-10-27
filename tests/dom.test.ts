@@ -266,7 +266,7 @@ describe('gameplay wiring', () => {
     await new Promise((resolve) => setTimeout(resolve, 30));
     expect(document.querySelector('.spb-over')?.classList.contains('active')).toBe(true);
     expect(document.querySelectorAll('.js-local-table li')).toHaveLength(1);
-    // Without a Pages Function the API call fails — the UI must show a fallback.
+    // Without the server endpoint the API call fails — the UI must show a fallback.
     const status = document.querySelector('.js-global-status');
     expect(status?.textContent).not.toBe('Loading…');
     expect(status?.textContent?.toLowerCase()).toMatch(/offline|unavailable|timed out|not valid/);

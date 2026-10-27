@@ -1,77 +1,62 @@
 # 🪐 Space Pinball Blast
 
-A kid-friendly, neon space-themed pinball game for the browser: **50
-progression stages**, real Matter.js flippers, a Cloudflare D1 global
-leaderboard, and an audio system that is fully playable with zero audio files.
+A bright, kid-friendly space pinball game you can play right in the browser.
+Flip the ball, blast the bumpers and chase a high score across **50 progressive
+stages** — on a desktop, a tablet or a phone.
 
-Built with **Vite + TypeScript + HTML Canvas + Matter.js**, deployable to
-**Cloudflare Pages** with a Pages Function (`/functions/api/scores.ts`).
+Play with the keyboard or with the big on-screen buttons. Every sound is
+generated live, so the game is fully playable even with no audio files at all.
 
 ---
 
-## Features
+## 👤 Developer credit
 
-- **Real flippers** — left/right controls rotate kinematic flipper blades. The
-  blade strikes the ball through the physics solver; no artificial force is ever
-  applied to the ball from input.
-- **50 data-driven stages** with themes, goals, gravity/timer modifiers, boss
-  stages at 10/20/30/40/50, and a final victory screen.
-- **Rich scoring**: pop bumpers, slingshots, stand-up targets, drop-target
-  banks, rollover lanes, spinner, orbits, ramps, skill shot, jackpots, multiball
-  locks, combos, multipliers, extra balls and ball saves.
-- **Global top-10 leaderboard** via Cloudflare D1 with server-side validation
-  and a basic per-IP rate limit, plus the original local top-10 table that keeps
-  working offline.
-- **Audio manager** with file-first playback and synthesized fallbacks, separate
-  music/SFX mute toggles, and autoplay-safe behaviour.
-- **Accessibility & UX**: pause/restart screens, stage select, high-DPI canvas,
-  reduced-motion option, keyboard focus outlines, colour+icon distinction for
-  locked stages, and large touch controls.
-- **Stable physics at any refresh rate**: the simulation runs on a fixed 60 Hz
-  step with a speed cap that prevents tunnelling.
-- **Developer credits** shown on the start screen, a dedicated **CREDITS**
-  screen, a subtle semi-transparent footer while playing, and on the game-over
-  and victory screens.
-
-## Credits
-
-The developer credit line is stored once in `src/game/credit.ts` as ordered
-segments and rendered in four places:
-
-| Where | Element | Notes |
-| --- | --- | --- |
-| Start screen | `.credit-block` footer at the bottom of the menu panel | Full-size text, e-mail and website are links |
-| **CREDITS** screen | `CREDITS` button on the start menu | Mandated line large and centred, plus game/engine/tooling attribution |
-| Gameplay | `.spb-credit-rail` at the bottom of the playfield | Small, 45% opacity, no pointer events, lifted above the touch buttons |
-| Game over / victory | `.credit-block-over` footer | Full-size text with links |
-
-The mandated string is:
+### Dev- Tejendra Bahubali | Email - [tejendrabahubali@outlook.com](mailto:tejendrabahubali@outlook.com) | Website - [https://tejendrabahubali2026.pagezapp.cc.cd/](https://tejendrabahubali2026.pagezapp.cc.cd/)
 
 ```
 Dev- Tejendra Bahubali | Email - tejendrabahubali@outlook.com | Website - https://tejendrabahubali2026.pagezapp.cc.cd/
 ```
 
-Because only the e-mail and URL are wrapped in anchors, every credit element's
-`textContent` still reads back as that exact string — verified in
-`tests/credits.test.ts`.
+The same line appears inside the game: on the start screen, on the **CREDITS**
+screen, as a subtle footer while you play, and on the game-over and victory
+screens.
 
-## Controls
+---
 
-| Action | Keyboard | Touch / pointer |
-| --- | --- | --- |
-| Left flipper | `←` or `A` | left on-screen button (or tap left half) |
-| Right flipper | `→` or `D` | right on-screen button (or tap right half) |
-| Launch / plunger | hold `Space` or `↓`, release to fire | hold `LAUNCH`, release |
-| Pause | `P` or `Esc` | pause button |
-| Restart stage | `R` (pause / game-over screens) | restart button |
-| Mute all audio | `M` | music / SFX toggles |
-| Menus | `Enter` | buttons |
+## What's in the game
 
-Hold-and-release charges the plunger (release early for a soft launch). Both
-flippers work simultaneously, and keys are released automatically on window
-blur or when the tab is hidden.
+### 🕹️ Real flipper physics
+The flippers are solid blades that sweep through the playfield — the ball is
+struck by the blade itself, never nudged along by the controls. Time your flip
+and you can send the ball all the way up to the top lanes.
 
-## Scoring & gameplay systems
+### 🌌 50 progressive stages
+Stage 1 teaches you the flippers and the launcher. From there you unlock ramps,
+orbits, target banks, rollover lanes, spinners and moving obstacles, one stage at
+a time.
+
+| Stages | What you learn |
+| --- | --- |
+| 1–5 | flippers, launcher, bumpers, simple targets |
+| 6–10 | top lanes, target banks, first boss |
+| 11–20 | ramps, orbits, combos and timed goals |
+| 21–30 | ball locks, multiball, moving obstacles |
+| 31–40 | multi-part missions and tighter time limits |
+| 41–49 | everything combined, with stricter goals |
+| 50 | **Supernova Finale** — the final stage and the victory screen |
+
+Clearing a stage unlocks the next one, and your progress is remembered on your
+own device. Stage Select lets you replay anything you've cleared and shows a
+lock icon on stages you haven't reached yet.
+
+### 👾 Boss battles
+Stages **10, 20, 30, 40 and 50** are boss stages: faster gravity, bigger goals,
+more balls and a much larger jackpot. Beat them to push deeper into the galaxy.
+
+### 🎯 Scoring to chase
+Pop bumpers, slingshots, stand-up and drop targets, target banks, rollover lanes,
+a spinner, orbits, ramps, a skill shot, locks, multiball, jackpots and stage-clear
+bonuses — all multiplied by combos and score multipliers.
 
 | Element | Base points (before multiplier) |
 | --- | --- |
@@ -90,343 +75,203 @@ blur or when the tab is hidden.
 | Jackpot | 18,000 + 900 × stage (boss stages ×1.4) |
 | Stage clear bonus | 5,000 + 400 × stage (bosses: 50,000) |
 
-- **Combo**: consecutive scoring hits within 3.2 s build a chain (max ×8 in the
-  HUD; every 2 combo steps grants +1 multiplier).
-- **Multiplier**: stage base multiplier (some stages start at ×2) plus the combo
-  bonus, capped per stage (max ×10 globally).
-- **Ball save**: 2.6–5.2 s after each launch depending on the stage; a drain in
-  that window re-serves the ball without losing a life.
-- **Multiball**: lock balls in the lock lane to start a two-ball launch from the
-  plunger lane.
-- **Extra ball**: clearing two stage goals awards one extra ball.
-- All scoring goes through `ScoreManager`, which clamps values to
-  `9,999,999,999` (well inside the safe integer range) and refuses invalid
-  numbers. Each element has its own collision cooldown so one impact can never
-  tick-farm points.
+- **Combos** reward quick consecutive hits; every couple of steps adds a
+  multiplier.
+- **Ball save** gives you a few forgiving seconds after each launch, so an early
+  drain doesn't cost a ball.
+- **Extra ball** at two completed goals per stage, and **multiball** once you fill
+  the lock lane.
+- Scores are capped at `9,999,999,999` so nothing can overflow.
 
-## The 50 stages
+### 🔊 Sound effects and music
+Hits, flippers, launches, jackpots and game over each have their own sound, plus a
+looping background track. Everything is synthesized on the fly, so no downloads
+are needed. Music and effects have separate mute buttons, and the game never
+makes noise until you interact with it.
 
-Stages live in `src/game/stages/library.ts` and are generated from typed
-blueprints + reusable layout archetypes (`classic`, `orbit`, `ramp`, `banks`,
-`lanes`, `gauntlet`, `twin`, `movers`, `boss`). Each stage defines:
+### 🏆 Online global leaderboard
+Finish a run and you can send your **run total** to the public top-10 board, where
+it sits alongside scores from other players. Your own device keeps a separate
+local top-10 table, so the game still rewards you when you're offline. Frames the
+board is unreachable, the local table takes over automatically and the UI says so.
 
-- id, name, tagline, theme (8 palettes), gravity, balls, optional time limit,
-  ball-save duration, flipper power, base/max multiplier, jackpot value,
-  locks required, goals, rewards and full layout data.
+> Scores are sent from the browser, so the global board is a friendly
+> high-score list rather than a cheat-proof ranking.
 
-Difficulty ramps from a gentle stage 1 to a 4-ball, timed final boss:
+### 📱 Desktop, tablet and phone
+The playfield scales to any screen, the interface reflows for narrow phones, and
+large touch buttons appear on touch devices. Keyboard players use the arrows and
+dedicated action keys.
 
-| Stages | Focus |
-| --- | --- |
-| 1–5 | flippers, launcher, bumpers, basic targets |
-| 6–10 | lanes, target banks, first boss (10) |
-| 11–20 | ramps, orbits, combos, multipliers, timed goals, boss (20) |
-| 21–30 | locks, multiball, moving obstacles, boss (30) |
-| 31–40 | multi-part missions, time pressure, boss (40) |
-| 41–49 | advanced combinations and stricter goals |
-| 50 | **Supernova Finale** — the victory stage |
+### ♿ Comfort and accessibility
+Pause and restart at any time, a **reduced motion** option, keyboard focus
+outlines, and locked stages marked with both a colour change and a lock icon.
 
-**Progression**: stage 1 starts unlocked; clearing a stage unlocks the next one.
-Progress, per-stage best scores and the highest unlocked stage are stored in
-`localStorage` (`spb_progress_v2`). Stage select shows locked stages with a lock
-icon and "Locked" label, allows replaying cleared stages, and offers a
-confirm-guarded **Reset Progress** button. Finishing stage 50 shows the victory
-screen. Corrupt/legacy storage is discarded safely rather than crashing the game.
-
-### Local vs. global score
-
-- **Per-stage score**: shown on the stage-complete screen, stored as that
-  stage's local best.
-- **Run total**: the cumulative score of the current run (all stages played
-  since you pressed Play). **This run total is what is submitted to the global
-  leaderboard**, and it is also what goes into the local top-10 table.
-- Restarting a stage discards that stage's points but keeps points banked from
-  earlier stages.
-
-## Local development
-
-Requires **Node.js 20.19+ (Node 22 recommended)** and npm.
-
-```bash
-npm ci          # or: npm install
-npm run dev     # Vite dev server, http://localhost:5173
-```
-
-The Vite dev server has no Pages Functions, so `/api/scores` is unavailable and
-the UI automatically falls back to the local leaderboard. To develop the
-frontend **and** the D1 leaderboard together, see
-[Local Pages development](#local-development-with-pages-functions).
-
-## Build, typecheck and test
-
-```bash
-npm run build              # production bundle in dist/
-npm run preview            # preview the production build
-npm run typecheck          # tsc --noEmit (app + tests)
-npm run typecheck:functions# tsc -p tsconfig.functions.json (Pages Function)
-npm test                   # vitest (87 tests)
-npm run check              # typecheck + functions typecheck + tests + build
-```
-
-The test suite covers flipper physics (a flipper hit must reach the upper
-half), launch behaviour, stage-library completeness (exactly 50 unique,
-validated stages), scoring clamps/cooldowns, localStorage parsing and fallbacks,
-leaderboard validation/response parsing, score formatting, and a jsdom smoke
-test that boots the real game, plays frames, completes a stage and ends a run.
-
-## Project structure
-
-```
-functions/api/scores.ts     # Cloudflare Pages Function: GET/POST /api/scores
-migrations/0001_init.sql     # D1 schema (scores + rate_limits)
-wrangler.toml                # Pages + D1 binding configuration
-src/
-  main.ts                    # entry point
-  audio/sound.ts             # audio manager (files + synth fallback)
-  game/
-    api.ts                   # leaderboard client (timeouts, offline fallback)
-    constants.ts             # tuning, scoring values, storage keys
-    game.ts                  # game states, stage lifecycle, collisions, input
-    particles.ts             # pooled sparks + floating score text
-    renderer.ts              # data-driven canvas renderer
-    scoring.ts               # ScoreManager (single source of truth)
-    storage.ts               # scores, progress, prefs, player name
-    styles.css               # UI theme
-    stages/types.ts          # typed stage model + validation
-    stages/library.ts        # 50 stage blueprints → configs
-    stages/themes.ts         # 8 visual themes
-  physics/
-    flippers.ts              # kinematic flipper
-    stageBuilder.ts          # StageConfig → Matter.js bodies + draw data
-    matterExtensions.ts      # typed wrappers for matter-js setAngle/setPosition
-  shared/leaderboard.ts      # validation/parsing shared by client + Function
-  game/credit.ts             # developer credit text (single source of truth)
-  ui/screens.ts              # menus, HUD, touch controls, leaderboard UI
-tests/                       # vitest suites
-tools/sim.ts                 # optional headless physics report
-public/sounds/README.md      # audio drop-in instructions
-```
-
-## Audio
-
-The game synthesizes every sound and the background music with the Web Audio
-API, so it is fully playable with **no audio files present**. To use real
-assets, drop files into `public/sounds/` using these names:
-
-`bgm.mp3`, `flipper.wav`, `bumper.wav`, `launch.wav`, `gameover.wav`
-(optional extras in `public/sounds/README.md`).
-
-Missing or undecodable files fall back to synthesis — they can never block
-startup. Music starts only after a user gesture, is ducked while paused and is
-suspended while the tab is hidden. Music and SFX mute preferences persist in
-`localStorage`. No third-party audio is committed; see
-[`public/sounds/README.md`](public/sounds/README.md) for licence-safe sourcing
-instructions.
-
-## Leaderboard architecture
-
-- Frontend: `src/game/api.ts` → `GET/POST /api/scores` with a 6.5 s abort
-  timeout. Failures are classified (offline / timeout / HTTP / rate-limit /
-  malformed) and never break the game.
-- Backend: `functions/api/scores.ts` (Cloudflare Pages Function).
-- Database: Cloudflare D1, table `scores (id, name, score, created_at)` plus a
-  `rate_limits` table. The top-10 query is
-  `ORDER BY score DESC, created_at ASC, id ASC LIMIT 10` (earliest entry wins
-  ties).
-
-### API
-
-`GET /api/scores` → `200`
-
-```json
-{ "scores": [ { "name": "Nova", "score": 123456, "createdAt": 1730000000000 } ] }
-```
-
-`POST /api/scores` with `{ "name": "string", "score": 123 }` →
-
-- `201 { "ok": true, "rank": 1 }` on success
-- `400` invalid JSON / name / score, `413` body too large, `415` wrong content
-  type, `405` unsupported method (with `Allow` header), `429` rate limited (with
-  `Retry-After`), `500` misconfiguration or database error.
-
-Validation: name must be a string, trimmed, 1–12 characters, without control
-characters; score must be a positive safe integer. All SQL is parameterized and
-no stack traces or database details are returned. Responses use
-`Cache-Control: no-store`.
-
-### Rate limiting (basic abuse control only)
-
-POSTs are limited to **5 per minute per connecting IP** using a fixed window in
-D1. Only a SHA-256 hash of `CF-Connecting-IP` is stored, and it is never returned
-to clients. This is a basic abuse control, **not an anti-cheat system**: scores
-are submitted by the browser and can be manipulated without authoritative
-server-side gameplay. The leaderboard is intentionally described as
-"not cheat-proof".
-
-### Offline behaviour
-
-If `GET`/`POST` fails (static hosting without Functions, `vite dev`, offline,
-timeout, malformed response), the game keeps working and the UI labels the local
-board. Every eligible run total is saved locally regardless of API availability.
+### 🧑‍🚀 Developer credits in-game
+A **CREDITS** button on the start menu opens a dedicated credits screen. The
+mandatory developer line also appears on the start screen, on the game-over and
+victory screens, and as a small translucent footer while playing, so it never
+gets in the way of the ball.
 
 ---
 
-## Deploy to Cloudflare Pages
+## How to play
 
-These steps follow the current Cloudflare docs. Official references:
+| Action | Keyboard | Touch / pointer |
+| --- | --- | --- |
+| Left flipper | `←` or `A` | left on-screen button |
+| Right flipper | `→` or `D` | right on-screen button |
+| Launch / plunger | hold `Space` or `↓`, release to fire | hold **LAUNCH**, release |
+| Pause | `P` or `Esc` | pause button |
+| Restart stage | `R` (pause / game-over screens) | restart button |
+| Mute all audio | `M` | music / SFX toggles |
+| Menus | `Enter` | buttons |
 
-- Pages Git integration: <https://developers.cloudflare.com/pages/get-started/git-integration/>
-- Pages build configuration: <https://developers.cloudflare.com/pages/configuration/build-configuration/>
-- Pages Functions (D1 bindings): <https://developers.cloudflare.com/pages/functions/bindings/#d1-databases>
-- Pages Wrangler configuration: <https://developers.cloudflare.com/pages/functions/wrangler-configuration/>
-- D1 getting started: <https://developers.cloudflare.com/d1/get-started/>
-- D1 migrations: <https://developers.cloudflare.com/d1/reference/migrations/>
-- D1 local development: <https://developers.cloudflare.com/d1/best-practices/local-development/>
-- Wrangler install/auth: <https://developers.cloudflare.com/workers/wrangler/install-and-update/>
+Hold the plunger and release for a charged launch — a short hold gives a gentle
+shot, a long hold fires the ball around the lane. Both flippers work at the same
+time, and keys release automatically if the window loses focus or the tab is
+hidden, so the ball never jumps on its own.
 
-### 1. Push the repository to GitHub
+### Which score goes online?
 
-Fork this repository (or push your own copy) so Cloudflare can connect to it:
+- **Per-stage score** — shown on the stage-complete screen, saved as that stage's
+  local best.
+- **Run total** — everything you've banked since you pressed Play. **This is the
+  number sent to the global leaderboard** and stored in the local top 10.
+- Restarting a stage throws away that stage's points but keeps earlier stages.
 
-```bash
-git push -u origin main
-```
+---
 
-### 2. Create the D1 database
+## Developer setup
 
-Authenticate Wrangler and create the database:
-
-```bash
-npx wrangler login
-npx wrangler d1 create space-pinball-leaderboard
-```
-
-The command prints a `database_id`. Keep it — you need it in step 3 and/or step
-5.
-
-### 3. Put the database id in `wrangler.toml`
-
-`wrangler.toml` in this repo contains a clearly-labelled placeholder:
-
-```toml
-[[d1_databases]]
-binding = "DB"                       # must stay "DB" — the Function reads env.DB
-database_name = "space-pinball-leaderboard"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
-migrations_dir = "migrations"
-```
-
-Replace `REPLACE_WITH_YOUR_D1_DATABASE_ID` with the id from step 2. This
-repository does **not** ship a real production database id. If you prefer to
-configure bindings in the dashboard instead (step 10), remove or comment out the
-`[[d1_databases]]` block so it does not override the dashboard configuration.
-
-### 4. Apply the migration
+You need a current long-term-support JavaScript runtime and its package manager
+installed on your machine. Then, from the repository folder:
 
 ```bash
-# local SQLite used by `wrangler pages dev`
-npx wrangler d1 migrations apply DB --local
+# Install dependencies
+npm install
 
-# the real Cloudflare D1 database
-npx wrangler d1 migrations apply DB --remote
-```
+# Start the development server (then open the printed local address)
+npm run dev
 
-`migrations/0001_init.sql` creates `scores`, the ranking index and
-`rate_limits`. Both commands are idempotent (`IF NOT EXISTS`).
-
-### 5. Connect the repository to Cloudflare Pages
-
-Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** →
-**Connect to Git**, then pick the repository and branch. Use these build
-settings:
-
-| Setting | Value |
-| --- | --- |
-| Framework preset | None (Vite) |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Root directory | `/` (default) |
-| Node.js version | `22` (set `NODE_VERSION=22` if the default differs; `package.json` requires ≥ 20.19) |
-
-Deploy. The static game works immediately; the leaderboard needs a D1 binding.
-
-### 6. Bind D1 to the Pages project
-
-If `wrangler.toml` has the `[[d1_databases]]` block with your real id, Pages
-applies it on the next deploy. To bind through the dashboard instead:
-
-1. **Workers & Pages** → your Pages project → **Settings** → **Bindings**.
-2. **Add** → **D1 database binding**.
-3. Variable name: **`DB`** (exactly this — the Function reads `env.DB`).
-4. D1 database: select `space-pinball-leaderboard`.
-5. Save, then **redeploy** the project for the binding to take effect.
-
-> Pages uses the bindings in `wrangler.toml` when that file is present and the
-> project was deployed with it. Do not configure the same binding name in two
-> places with different databases.
-
-### 7. Test the API
-
-```bash
-# top 10
-curl -i https://<your-project>.pages.dev/api/scores
-
-# submit a score
-curl -i -X POST https://<your-project>.pages.dev/api/scores \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Nova","score":12345}'
-```
-
-Expect `200` with `{"scores":[...]}` and `201` with `{"ok":true,"rank":...}`.
-Then play a run and submit from the game-over screen.
-
-### Local development with Pages Functions
-
-Run the Vite dev server for UI work (leaderboard falls back to local), or run
-the built site with Pages Functions and a local D1 database:
-
-```bash
+# Build the production bundle (output goes to dist/)
 npm run build
-npx wrangler d1 migrations apply DB --local
-npx wrangler pages dev          # serves dist/ + /functions on http://localhost:8788
+
+# Preview the production bundle locally
+npm run preview
+
+# Check types, run the tests, and build
+npm run check
 ```
 
-`wrangler pages dev` reads `wrangler.toml` (`pages_build_output_dir = "dist"`)
-and provides `env.DB` backed by a local SQLite file. For hot-reloading UI work
-with the real API, run `npx wrangler pages dev --port 8788` in one terminal and
-`npm run dev` in another — `vite.config.ts` proxies `/api` to port 8788.
-
-### Troubleshooting
-
-| Symptom | Cause / fix |
-| --- | --- |
-| `500 {"error":"Leaderboard is not configured."}` | No D1 binding named `DB`. Add it (step 6) and redeploy. |
-| `500 {"error":"Leaderboard is temporarily unavailable."}` | Migration not applied to the database the binding points at — run `npx wrangler d1 migrations apply DB --remote`. Check `npx wrangler d1 execute DB --remote --command "SELECT name FROM sqlite_master"`. |
-| `/api/scores` returns `404` | The `functions/` directory is not at the project root, or the output directory is wrong. Keep `functions/api/scores.ts` in the repo root and build to `dist`. Redeploy after changing Functions. |
-| Frontend loads, API calls fail | You are on a static host or `vite dev` without Functions — the game intentionally falls back to the local board. Use `wrangler pages dev` or the deployed Pages URL to test the API. |
-| Global board stays empty | Rate limited (`429`, 5 POSTs/min/IP), rejected name (`400`), or you have not applied the migration. Check the browser network tab and `npx wrangler pages deployment tail`. |
-| Audio silent | No files in `public/sounds/` is fine (synth fallback). Browsers also require a click/tap before audio starts. See `public/sounds/README.md`. |
-| Leaderboard shows "Offline — showing local scores only." | Expected without Functions/network. Local scores are still saved. |
-| Stage progress looks wrong after updates | Old/invalid `localStorage` is discarded automatically; use **Reset Progress** in Stage Select. |
-
-## Known limitations
-
-- Scores are client-submitted; there is no authoritative gameplay verification,
-  so the global board is **not cheat-proof**. The server rate limit is only
-  basic abuse control.
-- The D1 rate limiter uses a fixed window; concurrent requests can slightly
-  overshoot the limit.
-- Leaderboard queries scan the ranking index; fine at hobby scale.
-- Audio assets are not bundled — synthesized sounds are used until you add
-  licensed files.
-- One physics thread on the main thread (Matter.js); extremely old devices may
-  drop below 60 fps, but the fixed-step loop keeps behaviour consistent.
-
-## Physics smoke report (optional)
+Individual checks:
 
 ```bash
-npx esbuild tools/sim.ts --bundle --platform=node --format=esm --outfile=/tmp/sim.mjs
-node /tmp/sim.mjs
+npm run typecheck      # type-check the application and tests
+npm test               # run the automated test suite
 ```
 
-The same checks run in `npm test`.
+The development server serves the game with the **local** leaderboard. The public
+leaderboard needs its small server-side endpoint (below) running alongside it.
+
+### Project layout
+
+```
+src/
+  main.ts                  # entry point
+  audio/sound.ts           # sound manager: audio files + live synthesis
+  game/
+    api.ts                 # leaderboard API client (timeouts, offline fallback)
+    constants.ts           # tuning, scoring values, storage keys
+    credit.ts              # developer credit text (single source of truth)
+    game.ts                # game states, stage lifecycle, collisions, input
+    particles.ts           # sparks and floating score text
+    renderer.ts            # data-driven canvas renderer
+    scoring.ts             # single source of truth for scoring
+    storage.ts             # scores, progress, preferences, player name
+    styles.css             # UI theme
+    stages/types.ts        # typed stage model + runtime validation
+    stages/library.ts      # the 50 stage definitions
+    stages/themes.ts       # 8 colour themes
+  physics/                 # flippers, stage building, physics helpers
+  shared/leaderboard.ts    # validation/parsing shared by client and server
+  ui/screens.ts            # menus, HUD, touch controls, leaderboard UI
+functions/                 # server-side leaderboard endpoint (/api/scores)
+migrations/                # database schema for the leaderboard
+tests/                     # automated tests
+tools/sim.ts               # optional headless physics report
+public/sounds/             # optional drop-in audio files
+```
+
+### Audio files (optional)
+
+The game synthesizes all of its audio and needs **no sound files at all**. To use
+your own, drop them into `public/sounds/` with these names:
+
+`bgm.mp3`, `flipper.wav`, `bumper.wav`, `launch.wav`, `gameover.wav`
+
+Missing or unreadable files quietly fall back to synthesis and can never block
+startup. Music only begins after a click or tap, is softened while paused and
+stops while the tab is hidden. See
+[`public/sounds/README.md`](public/sounds/README.md) for licence-safe sourcing
+guidance — no third-party audio is included in this repository.
+
+### Online leaderboard (optional)
+
+The game is completely playable without any server. To enable the public top 10,
+a small server-side function in `functions/` answers two requests on `/api/scores`:
+
+- `GET /api/scores` → `200` with
+  `{ "scores": [ { "name": "Nova", "score": 123456, "createdAt": 1730000000000 } ] }`
+  (top 10, highest score first, earliest entry wins ties)
+- `POST /api/scores` with `{ "name": "string", "score": 123 }` →
+  `201 { "ok": true, "rank": 1 }`
+
+Responses for invalid input: `400` (bad payload, name or score), `413` (body too
+large), `415` (wrong content type), `405` (unsupported method, with an `Allow`
+header), `429` (too many submissions, with `Retry-After`) and `500`
+(misconfiguration). Names are trimmed to 1–12 characters with control characters
+removed; scores must be positive safe integers. All database access is
+parameterized and no internal details or stack traces are ever returned.
+
+Submissions are limited to **5 per minute per connecting address**, tracked as a
+one-way hash of the address and never shown to players. This is basic abuse
+control, not an anti-cheat system.
+
+Any hosting platform that can serve a static site plus one small server-side
+function and a SQL table will work; the repository root contains the endpoint, the
+schema and the deployment configuration for the hosted setup the game is built
+for. If you only want to host the static game, everything works except the public
+leaderboard — the local top 10 takes over.
+
+| Symptom | What to check |
+| --- | --- |
+| Global board says "not configured" | The server-side database binding is missing. |
+| Global board is "temporarily unavailable" | The database schema hasn't been applied to the bound database. |
+| `/api/scores` returns `404` | The `functions/` folder must sit at the repository root, and the build output must be the served folder. |
+| Global board is empty after playing | You may have hit the rate limit (`429`), or the name was rejected (`400`). |
+| No sound | Browsers require a click or tap before audio starts; also check the mute toggles. |
+| Progress looks odd after an update | Old or invalid saved data is discarded automatically; use **Reset Progress** in Stage Select. |
+
+### Known limitations
+
+- Scores come from the browser, so the public board is **not cheat-proof**; the
+  rate limit is only basic abuse control.
+- The built-in rate limiter uses a fixed time window, so concurrent requests can
+  slightly overshoot it.
+- Audio assets are not bundled — synthesized sounds play until you add your own
+  licensed files.
+- Physics runs on the main thread; very old devices may drop below 60 frames per
+  second, but the fixed-step loop keeps gameplay consistent.
+
+### Physics smoke report (optional)
+
+A headless report lives in `tools/sim.ts`. It builds all 50 stages and prints
+launch and flipper results, and you can bundle it with whatever tooling you
+prefer. The same scenarios also run as part of `npm test`.
+
+---
+
+**Space Pinball Blast** — Dev- Tejendra Bahubali | Email -
+tejendrabahubali@outlook.com | Website -
+https://tejendrabahubali2026.pagezapp.cc.cd/

@@ -1,13 +1,12 @@
-# Cloudflare Pages configuration for Space Pinball Blast.
+# Hosting configuration for the optional Space Pinball Blast leaderboard.
 #
-# `pages_build_output_dir` is required for Pages projects; without it Wrangler
-# ignores this file. Docs:
-#   https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+# `pages_build_output_dir` is required by the hosting platform's project mode;
+# without it this file is ignored.
 #
-# IMPORTANT: replace database_id below with the real id printed by
-#   npx wrangler d1 create space-pinball-leaderboard
-# The value in this repository is a clearly-labelled placeholder — deploying
-# with it unchanged will fail until you substitute your own database id.
+# IMPORTANT: set `database_id` below to the id printed when you create your own
+# database. The value committed here is the maintainer's own database and must
+# be replaced before you deploy your own copy, otherwise submissions from your
+# site will be written to someone else's board.
 
 name = "space-pinball-blast"
 compatibility_date = "2026-01-01"
@@ -19,6 +18,5 @@ database_name = "space-pinball-leaderboard"
 database_id = "286a2c53-185f-4912-86ff-cf4d09e8a173"
 migrations_dir = "migrations"
 
-# Local development (`npx wrangler pages dev`) uses a local SQLite-backed D1
-# instance created by:
-#   npx wrangler d1 migrations apply DB --local
+# Local development uses a throwaway local database instance created by the
+# migration command in the project's setup notes.
