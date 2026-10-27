@@ -1,5 +1,5 @@
 /**
- * Cloudflare Pages Function — global leaderboard backed by D1.
+ * Server-side leaderboard endpoint backed by a SQL table.
  *
  *   GET  /api/scores  → { scores: [{ name, score, createdAt }] } (top 10)
  *   POST /api/scores  → { name: string, score: number } → { ok, rank }

@@ -105,7 +105,7 @@ describe('stage library', () => {
     }
   });
 
-  it('builds Matter.js bodies for all 50 stages without NaN geometry', () => {
+  it('builds physics bodies for all 50 stages without NaN geometry', () => {
     for (const stage of STAGES) {
       const built = buildStage(stage);
       expect(built.bodies.length, `stage ${stage.id} bodies`).toBeGreaterThan(10);

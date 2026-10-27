@@ -15,7 +15,7 @@ function boot(): void {
 
   const game = new Game(wrap);
 
-  // Clean teardown during Vite hot-module replacement in dev
+  // Clean teardown during hot-module replacement in development
   if (import.meta.hot) {
     import.meta.hot.dispose(() => {
       game.destroy();

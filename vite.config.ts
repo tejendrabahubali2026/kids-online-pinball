@@ -21,8 +21,8 @@ export default defineConfig({
     // Allow the sandbox / tunnel hostnames used by live previews.
     allowedHosts: true,
     proxy: {
-      // Optional: run `npx wrangler pages dev` (port 8788) in another terminal
-      // to exercise the real D1 leaderboard from `npm run dev`.
+      // Optional: run the server-side endpoint locally (port 8788) in another
+      // terminal to exercise the real leaderboard from `npm run dev`.
       "/api": {
         target: "http://127.0.0.1:8788",
         changeOrigin: true,

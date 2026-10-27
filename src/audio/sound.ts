@@ -1,5 +1,5 @@
 /**
- * SoundManager — Web Audio powered, file-first with synthesized fallbacks.
+ * SoundManager — audio files first, live synthesis as the fallback.
  *
  * Files (all optional) live in /public/sounds — see public/sounds/README.md.
  * When a file is missing or cannot be decoded, a synthesized sound is used, so

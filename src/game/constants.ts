@@ -25,7 +25,7 @@ export const STEP_MS = 1000 / 60;
 export const MAX_BALL_SPEED = 33;
 
 /**
- * Matter.js tuning. A touch heavier than reality so the game stays lively and
+ * Physics tuning. A touch heavier than reality so the game stays lively and
  * child-friendly while still being stable.
  */
 export const PHYSICS = {
@@ -44,9 +44,10 @@ export const PHYSICS = {
 
 /**
  * Flipper tuning. The blade is a kinematic (static-body) flipper: it is rotated
- * around its pivot each fixed tick with Matter's `setAngle(angle, true)`, which
- * feeds the angular sweep into the collision solver as a real contact velocity.
- * The ball is therefore struck by the blade itself — no artificial impulses.
+ * around its pivot each fixed tick through the engine's `setAngle(angle, true)`,
+ * which feeds the angular sweep into the collision solver as a real contact
+ * velocity. The ball is therefore struck by the blade itself — no artificial
+ * impulses.
  */
 export const FLIPPER = {
   length: 78,
@@ -107,7 +108,7 @@ export const PREFS_KEY = 'spb_prefs_v2';
 export const PLAYER_NAME_KEY = 'spb_player_name_v1';
 export const PLAYER_NAME_MAX = 12;
 
-/** Leaderboard API route (served by the Cloudflare Pages Function). */
+/** Leaderboard API route (served by the server-side endpoint). */
 export const SCORES_ENDPOINT = '/api/scores';
 export const LEADERBOARD_LIMIT = 10;
 

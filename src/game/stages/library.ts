@@ -3,7 +3,8 @@
  * layout templates ("archetypes") plus per-stage rules, goals, themes and
  * physics modifiers.
  *
- * Nothing here touches Matter.js or the DOM — see `physics/stageBuilder.ts`.
+ * Nothing here touches the physics engine or the DOM — see
+ * `physics/stageBuilder.ts`.
  */
 import { STAGE_COUNT } from '../constants';
 import { mulberry32 } from '../util';

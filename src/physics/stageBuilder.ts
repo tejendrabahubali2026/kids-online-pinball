@@ -1,5 +1,5 @@
 /**
- * Converts a StageConfig into Matter.js bodies + drawable geometry.
+ * Converts a StageConfig into physics bodies + drawable geometry.
  *
  * The outer table (rounded top arc, side walls, launch lane, funnel walls and
  * slingshot funnels) is shared by every stage; everything else comes from the
